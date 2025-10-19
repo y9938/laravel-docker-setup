@@ -30,6 +30,13 @@ if [ -f "artisan" ]; then
 
   echo ">> Running seeders..."
   php artisan db:seed --force || true
+
+  if [ ! -L "public/storage" ] && [ -d "storage/app/public" ]; then
+    echo ">> Creating storage link..."
+    php artisan storage:link
+  else
+    echo ">> Storage link already exists or storage directory missing"
+  fi
 else
   echo ">> Not a Laravel project"
 fi
