@@ -3,13 +3,19 @@ set -e
 
 cd /var/www
 
+echo ">> Running in ${APP_ENV:-unknown} mode"
+
 if [ -f "artisan" ]; then
   chown -R laravel:laravel /var/www/storage /var/www/bootstrap/cache
   chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
   if [ ! -d "vendor" ]; then
     echo ">> Installing composer dependencies..."
-    composer install --optimize-autoloader
+    if [ "$APP_ENV" = "production" ]; then
+      composer install --no-dev --optimize-autoloader
+    else
+      composer install --optimize-autoloader
+    fi
   else
     echo ">> Vendor directory exists, skipping installation"
   fi
@@ -28,15 +34,28 @@ if [ -f "artisan" ]; then
   echo ">> Running migrations..."
   php artisan migrate --force || true
 
-  echo ">> Running seeders..."
-  php artisan db:seed --force || true
-
   if [ ! -L "public/storage" ] && [ -d "storage/app/public" ]; then
     echo ">> Creating storage link..."
     php artisan storage:link
   else
     echo ">> Storage link already exists or storage directory missing"
   fi
+
+  if [ "$APP_ENV" = "local" ]; then
+    echo ">> Running seeders..."
+    php artisan db:seed --force || true
+    if composer show knuckleswtf/scribe > /dev/null 2>&1; then
+      echo ">> Generating API documentation..."
+      php artisan scribe:generate --no-interaction || echo ">> Documentation generation failed, continuing..."
+    else
+      echo ">> Scribe not installed, skipping documentation generation"
+    fi
+  fi
+
+  if [ "$APP_ENV" = "production" ]; then
+    php artisan optimize
+  fi
+
 else
   echo ">> Not a Laravel project"
 fi
