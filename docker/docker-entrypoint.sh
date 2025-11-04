@@ -6,8 +6,8 @@ cd /var/www
 echo ">> Running in ${APP_ENV:-unknown} mode"
 
 if [ -f "artisan" ]; then
-  chown -R laravel:laravel /var/www/storage /var/www/bootstrap/cache
-  chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+  chown -R laravel:laravel storage bootstrap/cache
+  chmod -R 775 storage bootstrap/cache
 
   if [ ! -d "vendor" ]; then
     echo ">> Installing composer dependencies..."
@@ -44,6 +44,7 @@ if [ -f "artisan" ]; then
   if [ "$APP_ENV" = "local" ]; then
     echo ">> Running seeders..."
     php artisan db:seed --force || true
+
     if composer show knuckleswtf/scribe > /dev/null 2>&1; then
       echo ">> Generating API documentation..."
       php artisan scribe:generate --no-interaction || echo ">> Documentation generation failed, continuing..."
@@ -55,7 +56,6 @@ if [ -f "artisan" ]; then
   if [ "$APP_ENV" = "production" ]; then
     php artisan optimize
   fi
-
 else
   echo ">> Not a Laravel project"
 fi

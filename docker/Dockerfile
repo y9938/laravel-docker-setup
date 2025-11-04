@@ -18,7 +18,6 @@ RUN apt-get update && apt-get install -y \
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
 COPY ./docker/php-fpm.conf /usr/local/etc/php-fpm.d/zz-docker.conf
 
 COPY ./docker/docker-entrypoint.sh /usr/local/bin/
@@ -26,6 +25,7 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 RUN groupadd -g $GID laravel && useradd -u $UID -g $GID -m laravel
 USER laravel
+
 WORKDIR /var/www
 
 EXPOSE 9000

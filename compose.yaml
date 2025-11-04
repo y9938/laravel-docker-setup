@@ -50,7 +50,8 @@ services:
       - PMA_PORT=${DB_PORT:-3306}
       - UPLOAD_LIMIT=100M
     depends_on:
-      - mysql
+      mysql:
+        condition: service_started
 
 volumes:
   mysql-data:
