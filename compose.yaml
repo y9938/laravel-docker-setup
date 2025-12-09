@@ -13,17 +13,12 @@ services:
         condition: service_started
 
   php-fpm:
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile
-      args:
-        UID: ${UID:-1000}
-        GID: ${GID:-1000}
+    image: "${IMAGE_NAME}:${IMAGE_TAG}"
+    user: "${APP_UID}:${APP_GID}"
     env_file:
       - .env
     volumes:
       - ./:/var/www
-      - ./docker/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint.sh
     depends_on:
       mysql:
         condition: service_started
