@@ -1,3 +1,5 @@
+name: laravel-setup
+
 services:
   web:
     image: nginx:latest
@@ -13,15 +15,16 @@ services:
         condition: service_started
 
   php-fpm:
-    image: "${IMAGE_NAME}:${IMAGE_TAG}"
-    user: "${APP_UID}:${APP_GID}"
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        UID: ${APP_UID}
+        GID: ${APP_GID}
     env_file:
       - .env
     volumes:
       - ./:/var/www
-    depends_on:
-      mysql:
-        condition: service_started
 
   mysql:
     image: mysql:8.0

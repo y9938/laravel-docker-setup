@@ -1,4 +1,47 @@
+# Environment files
+.env
+.env.backup
+.env.production
+auth.json
+Homestead.yaml
+Homestead.json
+
+# Vendor / dependencies
+/vendor
+/composer/
+.composer-hash
+
+# Laravel storage and cache
+/storage/*.key
+/storage/pail
+/storage/framework/*
+!/storage/framework/.gitignore
+/storage/logs/*
+!/storage/logs/.gitignore
+/public/storage
+
+# Build artifacts
+/public/build
+/public/hot
+/bootstrap/cache/*
+!/bootstrap/cache/.gitignore
+
+# Testing / cache
+.phpunit.result.cache
 /.phpunit.cache
+
+# Editor / IDE
+/.idea
+/.vscode
+.phpactor.json
+.scribe/
+.scribe-hash
+
+# System / logs
+*.log
+.DS_Store
+Thumbs.db
+.bash_history
 /bootstrap/ssr
 /node_modules
 /public/build
@@ -26,3 +69,6 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+.composer-hash
+.scribe-hash
