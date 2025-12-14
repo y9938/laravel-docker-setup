@@ -26,6 +26,7 @@ services:
     volumes:
       - ./:/var/www
 
+
   mysql:
     image: mysql:8.0
     ports:
@@ -36,7 +37,8 @@ services:
       - MYSQL_PASSWORD=${DB_PASSWORD}
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
     volumes:
-      - mysql-data:/var/lib/mysql
+      - mysql-data-development:/var/lib/mysql
+
 
   phpmyadmin:
     image: phpmyadmin:latest
@@ -52,4 +54,4 @@ services:
         condition: service_started
 
 volumes:
-  mysql-data:
+  mysql-data-development:

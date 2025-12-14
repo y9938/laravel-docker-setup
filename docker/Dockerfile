@@ -13,7 +13,6 @@ ARG UID
 ARG GID
 
 # Create a new user with the specified UID and GID, reusing an existing group if GID exists
-# and update php-fpm to use the new user and group
 RUN if getent group ${GID}; then \
       group_name=$(getent group ${GID} | cut -d: -f1); \
       useradd -m -u ${UID} -g ${GID} -s /bin/bash www; \

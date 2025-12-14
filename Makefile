@@ -7,7 +7,7 @@ IMAGE_TAG  := latest
 IMAGE      := $(IMAGE_NAME):$(IMAGE_TAG)
 TAR_FILE   := $(IMAGE_NAME)_$(IMAGE_TAG).tar.gz
 
-.PHONY: help build load shell docs
+.PHONY: help build load shell docs db
 
 help:
 	@echo "Usage:"
@@ -19,6 +19,7 @@ help:
 	@echo "                Optional: SOURCE=url_or_file"
 	@echo "  shell         Enter php-fpm container as www"
 	@echo "  docs          Regenerate API documentation"
+	@echo "  db            Recreate DB"
 
 
 build:
@@ -54,3 +55,7 @@ shell:
 docs:
 	@echo "Regenerating API documentation..."
 	docker compose exec --user www php-fpm php artisan scribe:generate
+
+db:
+	@echo "Recreate DB..."
+	docker compose exec --user www php-fpm bash -c "php artisan migrate:fresh && php artisan db:seed"
