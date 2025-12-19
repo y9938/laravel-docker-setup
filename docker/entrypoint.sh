@@ -11,7 +11,7 @@ fi
 
 gosu www mkdir -p .hashes
 
-if [ ! -f .hashes/.composer-hash ] || ! sha1sum -c .hashes/.composer-hash; then
+if [ ! -f "vendor/autoload.php" ] || [ ! -f .hashes/.composer-hash ] || ! sha1sum -c .hashes/.composer-hash; then
   echo ">> composer.json or composer.lock changed, installing dependencies..."
   gosu www composer install --optimize-autoloader --no-interaction
   gosu www sha1sum composer.json composer.lock > .hashes/.composer-hash

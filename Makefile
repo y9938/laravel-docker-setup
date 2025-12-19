@@ -58,4 +58,4 @@ docs:
 
 db:
 	@echo "Recreate DB..."
-	docker compose exec --user www php-fpm bash -c "php artisan migrate:fresh && php artisan db:seed"
+	docker compose exec --user www php-fpm bash -c "php artisan migrate:fresh --seed"
