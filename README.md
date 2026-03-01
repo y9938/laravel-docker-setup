@@ -2,15 +2,17 @@
 
 - PHP-FPM, NGINX, MySQL, phpMyAdmin (in `compose.yaml`)
 
-## Create a project:
+## Run a container
 
 ```bash
 cp .env.example .env
 # !change .env for yourself
 docker compose up -d php-fpm
-docker compose exec php-fpm bash
-# or `make shell`
+docker compose exec --user www php-fpm bash
+# or `just shell`
 ```
+
+## Create a project:
 
 **_Rewrite below for yourself:_**
 
@@ -25,6 +27,7 @@ export PATH="$HOME/.composer/vendor/bin:$PATH"
 # Check options via `laravel new -h`
 laravel new example-app
 
+# copy your `.env` content to `example-app/.env`
 mv example-app/* example-app/.* ./
 rmdir example-app
 ```
@@ -36,6 +39,7 @@ rmdir example-app
 ```bash
 composer create-project --prefer-dist laravel/laravel example-app ^11.0
 
+# copy your `.env` content to `example-app/.env`
 mv example-app/* example-app/.* ./
 rmdir example-app
 ```
@@ -43,5 +47,5 @@ rmdir example-app
 ## Quick Actions
 
 ```bash
-make help
+just
 ```

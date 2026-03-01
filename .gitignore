@@ -9,7 +9,7 @@ Homestead.json
 # Vendor / dependencies
 /vendor
 /composer/
-.composer-hash
+.composer/
 
 # Laravel storage and cache
 /storage/*.key
@@ -23,6 +23,7 @@ Homestead.json
 # Build artifacts
 /public/build
 /public/hot
+/public/docs
 /bootstrap/cache/*
 !/bootstrap/cache/.gitignore
 
@@ -35,40 +36,12 @@ Homestead.json
 /.vscode
 .phpactor.json
 .scribe/
-.scribe-hash
 
 # System / logs
 *.log
 .DS_Store
 Thumbs.db
 .bash_history
-/bootstrap/ssr
-/node_modules
-/public/build
-/public/hot
-/public/storage
-/storage/*.key
-/storage/pail
-/resources/js/actions
-/resources/js/routes
-/resources/js/wayfinder
-/vendor
-.DS_Store
-.env
-.env.backup
-.env.production
-.phpactor.json
-.phpunit.result.cache
-Homestead.json
-Homestead.yaml
-npm-debug.log
-yarn-error.log
-/auth.json
-/.fleet
-/.idea
-/.nova
-/.vscode
-/.zed
 
-.composer-hash
-.scribe-hash
+# Custom
+.hashes/
