@@ -1,11 +1,15 @@
+FROM mysql:8.0 AS mysql
+
 FROM php:8.3-fpm
 
+COPY --from=mysql /usr/bin/mysql /usr/bin/mysql
+COPY --from=mysql /usr/bin/mysqldump /usr/bin/mysqldump
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpng-dev libonig-dev libxml2-dev libzip-dev \
-    zip unzip git gosu \
-    netcat-traditional \
-&& docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip \
-&& apt-get clean && rm -rf /var/lib/apt/lists/*
+    libonig-dev libicu-dev \
+    gosu netcat-traditional \
+ && docker-php-ext-install pdo_mysql mbstring intl \
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -25,6 +29,8 @@ RUN if getent group ${GID}; then \
 # Update php-fpm to use the new user and group
 RUN sed -i "s/user = www-data/user = www/g" /usr/local/etc/php-fpm.d/www.conf && \
     sed -i "s/group = www-data/group = $group_name/g" /usr/local/etc/php-fpm.d/www.conf
+
+COPY --chmod=644 ./docker/php.ini /usr/local/etc/php/conf.d/laravel.ini
 
 COPY ./docker/entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
