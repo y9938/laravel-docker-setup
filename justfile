@@ -24,8 +24,12 @@ shell:
   docker compose exec --user www php-fpm bash
 
 # Generate API documentation
-docs:
-  docker compose exec --user www php-fpm php artisan scribe:generate
+docs *args:
+  docker compose exec --user www php-fpm php artisan scribe:generate {{ args }}
+
+# Regenerate DB and docs
+docs-fresh:
+  just db && just docs --force
 
 # Reset database with fresh migration and seeding
 db:
@@ -34,3 +38,7 @@ db:
 # Run tests
 test:
   docker compose exec --user www php-fpm php artisan test
+
+# Run Pint
+lint:
+  docker compose exec --user www php-fpm php ./vendor/bin/pint
