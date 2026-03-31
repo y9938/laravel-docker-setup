@@ -2,11 +2,13 @@ FROM mysql:8.0 AS mysql
 
 FROM php:8.3-fpm
 
+# MySQL client requires libncurses6
 COPY --from=mysql /usr/bin/mysql /usr/bin/mysql
 COPY --from=mysql /usr/bin/mysqldump /usr/bin/mysqldump
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libonig-dev libicu-dev \
+    libncurses6 \
     gosu netcat-traditional \
  && docker-php-ext-install pdo_mysql mbstring intl \
  && apt-get clean && rm -rf /var/lib/apt/lists/*

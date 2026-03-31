@@ -5,8 +5,8 @@
 ## Run a container
 
 ```bash
-cp .env.example .env
-# !change .env for yourself
+cp .env.example .env && cp .env.testing.example .env.testing
+# !change .env* for yourself
 docker compose up -d php-fpm
 docker compose exec --user www php-fpm bash
 # or `just shell`

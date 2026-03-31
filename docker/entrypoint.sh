@@ -25,19 +25,36 @@ if [ -f ".env" ] && grep -q '^APP_KEY=$' .env; then
   gosu www php artisan key:generate --ansi
 fi
 
+if [ -f ".env.testing" ] && grep -q '^APP_KEY=$' .env.testing; then
+  echo ">> Generating application key for .env.testing..."
+  gosu www php artisan key:generate --env=testing --ansi
+fi
+
 echo ">> Waiting for MySQL..."
 while ! nc -z mysql 3306; do sleep 1; done
 
-echo ">> Running migrations..."
-gosu www php artisan migrate --force
+echo ">> Running migrations with seed..."
+set +e
+MIGRATE_OUTPUT="$(gosu www php artisan migrate --seed --force 2>&1)"
+MIGRATE_EXIT=$?
+set -e
+
+echo "$MIGRATE_OUTPUT"
+
+if [ "$MIGRATE_EXIT" -ne 0 ]; then
+  if echo "$MIGRATE_OUTPUT" | grep -Eq 'SQLSTATE\[|Illuminate\\Database\\QueryException'; then
+    echo ">> SQL migration error detected, running migrate:fresh --seed..."
+    gosu www php artisan migrate:fresh --seed
+  else
+    echo ">> Migration failed with non-SQL error, exiting..."
+    exit "$MIGRATE_EXIT"
+  fi
+fi
 
 if [ ! -L "public/storage" ] && [ -d "storage/app/public" ]; then
   echo ">> Creating storage link..."
   gosu www php artisan storage:link
 fi
-
-echo ">> Running seeders..."
-gosu www php artisan db:seed --force
 
 if composer show knuckleswtf/scribe >/dev/null 2>&1; then
   # Define all directories/files Scribe cares about
