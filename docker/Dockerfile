@@ -33,9 +33,7 @@ RUN sed -i "s/user = www-data/user = www/g" /usr/local/etc/php-fpm.d/www.conf &&
     sed -i "s/group = www-data/group = $group_name/g" /usr/local/etc/php-fpm.d/www.conf
 
 COPY --chmod=644 ./docker/php.ini /usr/local/etc/php/conf.d/laravel.ini
-
-COPY ./docker/entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/entrypoint.sh
+COPY --chmod=+x ./docker/entrypoint.sh /usr/local/bin/
 
 WORKDIR /var/www
 EXPOSE 9000
