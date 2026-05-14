@@ -19,6 +19,7 @@ ARG UID
 ARG GID
 
 # Create a new user with the specified UID and GID, reusing an existing group if GID exists
+# And update php-fpm to use the new user and group
 RUN if getent group ${GID}; then \
       group_name=$(getent group ${GID} | cut -d: -f1); \
       useradd -m -u ${UID} -g ${GID} -s /bin/bash www; \
@@ -26,11 +27,9 @@ RUN if getent group ${GID}; then \
       groupadd -g ${GID} www && \
       useradd -m -u ${UID} -g www -s /bin/bash www; \
       group_name=www; \
-    fi
-
-# Update php-fpm to use the new user and group
-RUN sed -i "s/user = www-data/user = www/g" /usr/local/etc/php-fpm.d/www.conf && \
-    sed -i "s/group = www-data/group = $group_name/g" /usr/local/etc/php-fpm.d/www.conf
+    fi && \
+    sed -i "s/user = www-data/user = www/g" /usr/local/etc/php-fpm.d/www.conf && \
+    sed -i "s/group = www-data/group = ${group_name}/g" /usr/local/etc/php-fpm.d/www.conf
 
 COPY --chmod=644 ./docker/php.ini /usr/local/etc/php/conf.d/laravel.ini
 COPY --chmod=+x ./docker/entrypoint.sh /usr/local/bin/
