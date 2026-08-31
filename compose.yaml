@@ -37,7 +37,6 @@ services:
 
   phpmyadmin:
     image: phpmyadmin:latest
-    restart: unless-stopped
     ports:
       - "127.0.0.1:${PHPMYADMIN_PORT:-8080}:80"
     environment:

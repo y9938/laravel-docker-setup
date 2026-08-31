@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eu
 
-# Имя должно совпадать с DB_DATABASE в phpunit.xml.
+# The name must match DB_DATABASE in phpunit.xml.
 TEST_DB=app_test
 
 mysql -uroot -p"${MYSQL_ROOT_PASSWORD}" <<EOSQL
